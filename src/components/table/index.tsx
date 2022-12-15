@@ -5,6 +5,13 @@ export enum TableStyle {
   StyleOne = "style-one",
   StyleTwo = "style-two",
 }
+interface DataType {
+  priceBands: string[];
+  tiers: {
+    tier: string;
+    prices: string[];
+  }[];
+}
 
 function Table({
   title,
@@ -12,19 +19,18 @@ function Table({
   style,
 }: {
   title: string;
-  data: any;
+  data: DataType;
   style: TableStyle;
 }) {
   const { priceBands, tiers } = data;
 
   return (
     <div>
-      <h2>{title}</h2>
       <table className={`table table--${style}`}>
-        {/* <caption>{title}</caption> */}
+        <caption>{title}</caption>
         <thead>
           <tr>
-            {priceBands.map((priceBand: any) => (
+            {priceBands.map((priceBand: string) => (
               <th key={priceBand} scope="col">
                 {priceBand}
               </th>
@@ -32,11 +38,11 @@ function Table({
           </tr>
         </thead>
         <tbody>
-          {tiers.map(
-            (tier: { tier: any; prices: { [x: string]: any } }, index: any) => {
-              return (
-                <tr row-label={tier.tier} key={tier.tier}>
-                  {Object.keys(priceBands).map((header, index) => {
+          {tiers.map((tier, index: number) => {
+            return (
+              <tr row-label={tier.tier} key={index}>
+                {Object.keys(priceBands).map(
+                  (header: string, index: number) => {
                     return (
                       <td
                         row-label={tier.tier}
@@ -45,11 +51,11 @@ function Table({
                         <span>{tier.prices[header]}</span>
                       </td>
                     );
-                  })}
-                </tr>
-              );
-            }
-          )}
+                  }
+                )}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
